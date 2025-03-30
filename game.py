@@ -8,7 +8,7 @@ map = Map()
 
 running = True
 while running:
-    screen.fill((0, 0, 0))
+    screen.fill((0, 0, 50))
 
     player.run()
     map.generating_map()

@@ -9,22 +9,38 @@ class Player:
         self.health = health
         self.damage = damage
         self.speed = speed
-        self.x = x
-        self.y = y
+        self.rect = pygame.Rect(x, y, player.get_width(), player.get_height())
 
     def run(self):
-        self.keys = pygame.key.get_pressed()
+        keys = pygame.key.get_pressed()
 
-        if self.keys[pygame.K_a]:
-            self.x -= self.speed
-        if self.keys[pygame.K_d]:
-            self.x += self.speed
-        if self.keys[pygame.K_w]:
-            self.y -= self.speed
-        if self.keys[pygame.K_s]:
-            self.y += self.speed
+        dx = 0
+        dy = 0
 
-        screen.blit(player, (self.x, self.y))
+        if keys[pygame.K_a]:
+            dx = -self.speed
+        if keys[pygame.K_d]:
+            dx = self.speed
+        if keys[pygame.K_w]:
+            dy = -self.speed
+        if keys[pygame.K_s]:
+            dy = self.speed
+
+        self.rect.x += dx
+        if self.check_collision(rect_map_1):
+            self.rect.x -= dx
+
+        self.rect.y += dy
+        if self.check_collision(rect_map_1):
+            self.rect.y -= dy
+
+        screen.blit(player, (self.rect.x, self.rect.y))
+
+    def check_collision(self, blocks):
+        for block in blocks:
+            if self.rect.colliderect(block):
+                return True
+        return False
 
     def fire(self):
         pass
