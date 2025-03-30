@@ -13,4 +13,5 @@ class Map:
         pass
 
     def generating_map(self):
-        screen.blit(wall, (400, 400))
+        for sprite in map_1:
+            screen.blit(sprite[0], (sprite[1], sprite[2]))
