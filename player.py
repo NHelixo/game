@@ -26,5 +26,12 @@ class Player:
 
         screen.blit(player, (self.x, self.y))
 
+    # def colliderect(self, other):
+    #     return self.rect.colliderect(other)  # Перевірка колізії з іншим rect
+
+    # def copy(self):
+    #     # Створюємо новий об'єкт Player з тією самою позицією та іншими атрибутами
+    #     return Player(self.x, self.y, self.health, self.damage, self.speed)
+
     def fire(self):
         pass
