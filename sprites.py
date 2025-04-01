@@ -2,6 +2,8 @@ import pygame
 
 player = pygame.image.load('sprites/player/player.png')
 
+enemy = pygame.image.load('sprites/enemy/enemy.png')
+
 wall_1 = pygame.image.load('sprites/map/wall_1.png')
 wall_2 = pygame.image.load('sprites/map/wall_2.png')
 
