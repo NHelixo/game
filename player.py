@@ -27,10 +27,20 @@ class Player:
             dy = self.speed
 
         self.rect.x += dx
+        if self.rect.x <= 0:
+            self.rect.x = 0
+        if self.rect.x >= 940:
+            self.rect.x = 940
+
         if self.check_collision(rect_map_1):
             self.rect.x -= dx
 
         self.rect.y += dy
+        if self.rect.y <= 0:
+            self.rect.y = 0
+        if self.rect.y >= 531:
+            self.rect.y = 531
+
         if self.check_collision(rect_map_1):
             self.rect.y -= dy
 

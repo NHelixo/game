@@ -5,7 +5,7 @@ from map import *
 
 
 player = Player(100, 5, 4, 100, 100)
-enemy = EnemyShooter(60, 5, 5)
+enemies: list[EnemyShooter] = []
 map = Map()
 
 running = True
@@ -13,15 +13,22 @@ while running:
     screen.fill((0, 0, 50))
 
     player.run()
-    enemy.spawn()
+    if len(enemies) < 3:
+        for _ in range(3 - len(enemies)):
+            enemy = EnemyShooter(60, 5, 5)
+            enemy.spawn()
+            enemies.append(enemy)
+
     map.generating_map()
-
-    pygame.display.update()
-
-    clock.tick(30)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
+
+    for enemy in enemies:
+        enemy.moving()
+
+    pygame.display.update()
+    clock.tick(30)
 

@@ -2,6 +2,7 @@ from sprites import *
 from map import *
 import pygame
 from abc import ABC, abstractmethod
+from random import randint
 
 
 class Enemy:
@@ -9,8 +10,9 @@ class Enemy:
         self.health = health
         self.damage = damage
         self.speed = speed
-        self.x = 0
-        self.y = 0
+        self.move_rand = 0
+        self.x = 200
+        self.y = 200
 
     @abstractmethod
     def spawn(self):
@@ -23,7 +25,7 @@ class Enemy:
     @abstractmethod
     def moving(self):
         pass
-    
+
     @abstractmethod
     def add_points(self):
         pass
@@ -31,18 +33,39 @@ class Enemy:
 
 class EnemyShooter(Enemy):
     def spawn(self):
-        screen.blit(enemy, (200, 200))
-        screen.blit(enemy, (300, 250))
-        screen.blit(enemy, (500, 300))
+        self.move_rand = randint(1, 4)
 
     def attack(self):
         pass
 
     def moving(self):
-        pass
+        if self.move_rand == 1:
+            self.x -= self.speed
+        elif self.move_rand == 2:
+            self.x += self.speed
+        elif self.move_rand == 3:
+            self.y -= self.speed
+        elif self.move_rand == 4:
+            self.y += self.speed
+
+        if self.x <= 0:
+            self.x = 0
+            self.spawn()
+        if self.x >= 940:
+            self.x = 940
+            self.spawn()
+
+        if self.y <= 0:
+            self.y = 0
+            self.spawn()
+        if self.y >= 531:
+            self.y = 531
+            self.spawn()
+
+        screen.blit(enemy, (self.x, self.y))
     
     def add_points(self):
-        pass
+        return 10
 
 
 class MeleeAttackEnemy(Enemy):
@@ -56,4 +79,4 @@ class MeleeAttackEnemy(Enemy):
         pass
     
     def add_points(self):
-        pass
+        return 15
