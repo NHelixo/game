@@ -23,8 +23,8 @@ def draw_text(text, font, color, surface, x, y):
 class MainMenu:
     def __init__(self):
         self.buttons = [
-            pygame.Rect(400, 250, 200, 50),  # Кнопка "Play"
-            pygame.Rect(400, 350, 200, 50),  # Кнопка "Settings"
+            pygame.Rect(375, 250, 250, 50),  # Кнопка "Play"
+            pygame.Rect(375, 350, 250, 50),  # Кнопка "Settings"
         ]
         
     def draw(self):
@@ -53,33 +53,88 @@ class MainMenu:
             elif self.buttons[1].collidepoint(event.pos):  # Settings
                 return "settings"
         return None
-    
+
+class PauseMenu:
+    def __init__(self):
+        self.buttons = [
+            pygame.Rect(375, 250, 250, 50),  # Resume
+            pygame.Rect(375, 320, 250, 50),  # Main Menu
+            pygame.Rect(375, 390, 250, 50),  # Quit
+        ]
+
+    def draw(self):
+        screen.fill((20, 20, 60))
+        draw_text("Paused", font, (255, 255, 255), screen, 440, 150)
+
+        mouse_pos = pygame.mouse.get_pos()
+
+        resume_button_color = (0, 0, 80) if not self.buttons[0].collidepoint(mouse_pos) else (0, 100, 200)
+        mainmenu_button_color = (0, 0, 80) if not self.buttons[1].collidepoint(mouse_pos) else (0, 100, 200)
+        quit_button_color = (0, 0, 80) if not self.buttons[2].collidepoint(mouse_pos) else (0, 100, 200)
+
+        pygame.draw.rect(screen, resume_button_color, self.buttons[0])  # Play
+        pygame.draw.rect(screen, mainmenu_button_color, self.buttons[1])  # Main Menu
+        pygame.draw.rect(screen, quit_button_color, self.buttons[2])  # Quit
+
+        draw_text("Resume", font, (255, 255, 255), screen, 433, 260)
+        draw_text("Main Menu", font, (255, 255, 255), screen, 410, 330)
+        draw_text("Quit", font, (255, 255, 255), screen, 460, 397)
+
+    def handle_events(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.buttons[0].collidepoint(event.pos):
+                return "resume"
+            elif self.buttons[1].collidepoint(event.pos):
+                return "main_menu"
+            elif self.buttons[2].collidepoint(event.pos):
+                return "quit"
+        return None  
 
 def game_loop():
     player = Player(100, 5, 4, 100, 100)
     enemy = EnemyShooter(60, 5, 5)
     map = Map()
+    pause_menu = PauseMenu()
+    paused = False
+    running = True
 
     running = True
     while running:
         screen.fill((0, 0, 50))
-
-        player.run()
-        if len(enemies) < 3:
-            for _ in range(3 - len(enemies)):
-                enemy = EnemyShooter(60, 5, 5)
-                enemy.spawn()
-                enemies.append(enemy)
-
-        map.generating_map()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
                 pygame.quit()
 
-        for enemy in enemies:
-            enemy.moving()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                paused = not paused
+
+            if paused:
+                action = pause_menu.handle_events(event)
+                if action == "resume":
+                    paused = False
+                elif action == "main_menu":
+                    return  # Exit to main menu
+                elif action == "quit":
+                    pygame.quit()
+                    return
+
+        if paused:
+            pause_menu.draw()
+        else:
+            player.run()
+
+            if len(enemies) < 3:
+                for _ in range(3 - len(enemies)):
+                    enemy = EnemyShooter(60, 5, 5)
+                    enemy.spawn()
+                    enemies.append(enemy)
+
+            map.generating_map()
+
+            for enemy in enemies:
+                enemy.moving()
 
         pygame.display.update()
         clock.tick(30)
