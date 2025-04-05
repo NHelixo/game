@@ -9,7 +9,9 @@ class Player:
         self.health = health
         self.damage = damage
         self.speed = speed
+        self.bullets = []
         self.rect = pygame.Rect(x, y, player.get_width(), player.get_height())
+        self.rotate_index = ""
 
     def run(self):
         keys = pygame.key.get_pressed()
@@ -19,12 +21,16 @@ class Player:
 
         if keys[pygame.K_a]:
             dx = -self.speed
+            self.rotate_index = 1
         if keys[pygame.K_d]:
             dx = self.speed
+            self.rotate_index = 2
         if keys[pygame.K_w]:
             dy = -self.speed
+            self.rotate_index = 3
         if keys[pygame.K_s]:
             dy = self.speed
+            self.rotate_index = 4
 
         self.rect.x += dx
         if self.rect.x <= 0:
@@ -53,4 +59,20 @@ class Player:
         return False
 
     def fire(self):
-        pass
+        buttons = pygame.mouse.get_pressed()
+        if buttons[0]:
+            bullet = pygame.draw.rect(screen, (255, 0, 0), (self.rect.x, self.rect.y, 5, 5))
+            direction = self.rotate_index
+            self.bullets.append((bullet, direction))
+
+        for bullet, direction in self.bullets:
+            if direction == 1:
+                bullet.x -= 10
+            elif direction == 2:
+                bullet.x += 10
+            elif direction == 3:
+                bullet.y -= 10
+            elif direction == 4:
+                bullet.y += 10
+
+            pygame.draw.rect(screen, (255, 0, 0), bullet)

@@ -64,6 +64,8 @@ def game_loop():
     while running:
         screen.fill((0, 0, 50))
 
+        player.fire()
+
         player.run()
         if len(enemies) < 3:
             for _ in range(3 - len(enemies)):
@@ -82,7 +84,7 @@ def game_loop():
             enemy.moving()
 
         pygame.display.update()
-        clock.tick(30)
+        clock.tick(120)
 
 def main():
     menu = MainMenu()
