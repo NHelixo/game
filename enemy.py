@@ -46,15 +46,15 @@ class EnemyShooter(Enemy):
         self.target_reached = False
         print(f"Spawned with direction: {self.move_rand}")
 
-    def attack(self):
+    def attack(self, player):
         current_time = pygame.time.get_ticks()
-
+    
         if current_time - self.last_shot_time >= self.shot_delay:
             bullet = pygame.Rect(self.x, self.y, 5, 5)
             self.bullets.append((bullet, self.move_rand))
             self.last_shot_time = current_time
-
-        for bullet, move_rand in self.bullets:
+    
+        for i, (bullet, move_rand) in enumerate(self.bullets):
             if move_rand == 1:
                 bullet.x -= 10
             elif move_rand == 2:
@@ -63,7 +63,12 @@ class EnemyShooter(Enemy):
                 bullet.y -= 10
             elif move_rand == 4:
                 bullet.y += 10
-
+    
+            if bullet.colliderect(player.rect):
+                player.take_damage(10)
+                self.bullets.pop(i)
+                break
+            
             pygame.draw.rect(screen, (255, 0, 0), bullet)
 
     def moving(self):

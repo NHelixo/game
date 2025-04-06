@@ -76,3 +76,10 @@ class Player:
                 bullet.y += 10
 
             pygame.draw.rect(screen, (255, 0, 0), bullet)
+
+    def take_damage(self, amount):
+        self.health -= amount
+        print(f"Player HP: {self.health}")
+
+    def is_dead(self):
+        return self.health <= 0
