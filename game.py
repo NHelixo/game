@@ -82,7 +82,7 @@ def game_loop():
                 running = False
                 pygame.quit()
 
-        player.fire(events)
+        player.fire(events, enemies)
 
         # Рух і атака ворогів
         for enemy in enemies:

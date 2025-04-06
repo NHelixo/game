@@ -34,11 +34,11 @@ class Enemy:
 class EnemyShooter(Enemy):
     def __init__(self, health, damage, speed, x, y):
         super().__init__(health, damage, speed)
-        self.target_reached = False  # Прапорець для перевірки, чи досягнуто протилежної сторони
         self.rect = pygame.Rect(x, y, enemy.get_width(), enemy.get_height())
         self.last_shot_time = 0
         self.shot_delay = 1000
         self.bullets = []
+        self.target_reached = False
         self.last_collided = None
 
     def spawn(self):
@@ -48,40 +48,45 @@ class EnemyShooter(Enemy):
 
     def attack(self, player):
         current_time = pygame.time.get_ticks()
-    
         if current_time - self.last_shot_time >= self.shot_delay:
             bullet = pygame.Rect(self.x, self.y, 5, 5)
             self.bullets.append((bullet, self.move_rand))
             self.last_shot_time = current_time
-    
-        for i, (bullet, move_rand) in enumerate(self.bullets):
-            if move_rand == 1:
-                bullet.x -= 10
-            elif move_rand == 2:
-                bullet.x += 10
-            elif move_rand == 3:
-                bullet.y -= 10
-            elif move_rand == 4:
-                bullet.y += 10
-    
+
+        new_bullets = []
+        for bullet, move_rand in self.bullets:
+            if move_rand == 1: bullet.x -= 10
+            elif move_rand == 2: bullet.x += 10
+            elif move_rand == 3: bullet.y -= 10
+            elif move_rand == 4: bullet.y += 10
+
             if bullet.colliderect(player.rect):
                 player.take_damage(10)
-                self.bullets.pop(i)
-                break
-            
+                continue
+
+            # Перевірка на зіткнення з блоками
+            hit_wall = False
+            for wall in rect_map_1:
+                if bullet.colliderect(wall):
+                    hit_wall = True
+                    break
+
+            if hit_wall:
+                continue
+
+            new_bullets.append((bullet, move_rand))
             pygame.draw.rect(screen, (255, 0, 0), bullet)
 
+        self.bullets = new_bullets
+
     def moving(self):
-        # Попереднє значення координат
-        new_x = self.x
-        new_y = self.y
+        new_x, new_y = self.x, self.y
+        rect = pygame.Rect(self.x, self.y, enemy.get_width(), enemy.get_height())
 
-        rect = pygame.Rect(new_x, new_y, enemy.get_width(), enemy.get_height())
-
+        # Перевірка на зіткнення з блоками
         if self.check_collision(rect_map_1, rect):
             self.target_reached = True
 
-        # Рух у поточному напрямку
         if self.move_rand == 1:
             new_x -= self.speed
         elif self.move_rand == 2:
@@ -91,61 +96,50 @@ class EnemyShooter(Enemy):
         elif self.move_rand == 4:
             new_y += self.speed
 
-        # Перевірка, чи досягнуто протилежної сторони
-        if self.move_rand == 1 and new_x <= 0:  # Вліво до x = 0
-            new_x = 0
-            self.target_reached = True
-            self.last_collided = None
-        elif self.move_rand == 2 and new_x >= 940:  # Вправо до x = 940
-            new_x = 940
-            self.target_reached = True
-            self.last_collided = None
-        elif self.move_rand == 3 and new_y <= 0:  # Вверх до y = 0
-            new_y = 0
-            self.target_reached = True
-            self.last_collided = None
-        elif self.move_rand == 4 and new_y >= 531:  # Вниз до y = 531
-            new_y = 531
+        # Перевірка меж екрану
+        bounds = {1: new_x <= 0, 2: new_x >= 940, 3: new_y <= 0, 4: new_y >= 531}
+        if bounds.get(self.move_rand):
+            new_x = max(0, min(new_x, 940))
+            new_y = max(0, min(new_y, 531))
             self.target_reached = True
             self.last_collided = None
 
-        # Якщо досягнуто протилежної сторони, змінюємо напрямок
         if self.target_reached:
             old_direction = self.move_rand
-            exclude_directions = [old_direction]  # Виключаємо поточний напрямок
-            self.change_direction(exclude=exclude_directions)
-            self.target_reached = False  # Скидаємо прапорець
-            print(f"Reached target. Old direction: {old_direction}, New direction: {self.move_rand}, Position: ({self.x}, {self.y})")
-
-        # Оновлюємо координати
+            self.change_direction(exclude=[old_direction])
+            self.target_reached = False
         else:
-            self.x = new_x
-            self.y = new_y
+            self.x, self.y = new_x, new_y
 
-        # Відображаємо ворога
+        rect.x, rect.y = self.x, self.y
+
+        # Відображення ворога на екрані
         screen.blit(enemy, (self.x, self.y))
+
+        # Відображення здоров'я ворога
+        font = pygame.font.SysFont("Arial", 20)
+        health_text = font.render(str(self.health), True, (255, 0, 0))
+        screen.blit(health_text, (self.x, self.y - 20))
 
     def check_collision(self, blocks, rect):
         for block in blocks:
             if rect.colliderect(block):
-                if self.last_collided == block:
-                    return False
-                else:
+                if self.last_collided != block:
                     self.last_collided = block
                     return True
         return False
-    
+
     def add_points(self):
         return 10
 
+    def take_damage(self, amount):
+        self.health -= amount
+        if self.health <= 0:
+            pass
+
     def change_direction(self, exclude=[]):
-        possible_directions = [1, 2, 3, 4]
-        for direction in exclude:
-            if direction in possible_directions:
-                possible_directions.remove(direction)
-        if not possible_directions:
-            possible_directions = [1, 2, 3, 4]
-        self.move_rand = possible_directions[randint(0, len(possible_directions) - 1)]
+        directions = [d for d in [1, 2, 3, 4] if d not in exclude]
+        self.move_rand = randint(1, 4) if not directions else directions[randint(0, len(directions) - 1)]
 
 
 class MeleeAttackEnemy(Enemy):

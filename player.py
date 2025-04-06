@@ -58,13 +58,15 @@ class Player:
                 return True
         return False
 
-    def fire(self, events):
+    def fire(self, events, enemies):
+        # Обробка події натискання на кнопку миші
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 bullet = pygame.Rect(self.rect.x, self.rect.y, 5, 5)
                 direction = self.rotate_index
                 self.bullets.append((bullet, direction))
 
+        new_bullets = []
         for bullet, direction in self.bullets:
             if direction == 1:
                 bullet.x -= 10
@@ -75,7 +77,26 @@ class Player:
             elif direction == 4:
                 bullet.y += 10
 
+            # Перевірка на зіткнення з блоками
+            hit_wall = False
+            for wall in rect_map_1:
+                if bullet.colliderect(wall):
+                    hit_wall = True
+                    break
+
+            if hit_wall:
+                continue
+
+            # Перевірка на зіткнення з ворогами
+            for enemy in enemies:
+                if bullet.colliderect(enemy.rect):
+                    enemy.take_damage(10)
+                    break
+
+            new_bullets.append((bullet, direction))
             pygame.draw.rect(screen, (255, 0, 0), bullet)
+
+        self.bullets = new_bullets
 
     def take_damage(self, amount):
         self.health -= amount
