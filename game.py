@@ -138,7 +138,7 @@ def spawn_enemy(x=0, y=0):
 def game_loop():
     global enemies  # щоб змінювати глобальний список ворогів і вони знову спавнились в початковій точці в новій грі
     enemies = []
-    player = Player(10, 5, 4, 100, 100)
+    player = Player(100, 5, 4, 100, 100)
     map = Map()
     pause_menu = PauseMenu()
     paused = False
