@@ -10,6 +10,7 @@ class Player:
         self.damage = damage
         self.speed = speed
         self.bullets = []
+        self.xp = 0
         self.rect = pygame.Rect(x, y, player.get_width(), player.get_height())
         self.rotate_index = 1
 
@@ -88,10 +89,15 @@ class Player:
                 continue
 
             # Перевірка на зіткнення з ворогами
+            hit_enemy = False
             for enemy in enemies:
                 if bullet.colliderect(enemy.rect):
                     enemy.take_damage(10)
+                    hit_enemy = True
                     break
+
+            if hit_enemy:
+                continue
 
             new_bullets.append((bullet, direction))
             pygame.draw.rect(screen, (255, 0, 0), bullet)
