@@ -81,10 +81,10 @@ class EnemyShooter(Enemy):
 
     def moving(self):
         new_x, new_y = self.x, self.y
-        rect = pygame.Rect(self.x, self.y, enemy.get_width(), enemy.get_height())
+        self.rect = pygame.Rect(self.x, self.y, enemy.get_width(), enemy.get_height())
 
         # Перевірка на зіткнення з блоками
-        if self.check_collision(rect_map_1, rect):
+        if self.check_collision(rect_map_1, self.rect):
             self.target_reached = True
 
         if self.move_rand == 1:
@@ -111,7 +111,7 @@ class EnemyShooter(Enemy):
         else:
             self.x, self.y = new_x, new_y
 
-        rect.x, rect.y = self.x, self.y
+        self.rect.x, self.rect.y = self.x, self.y
 
         # Відображення ворога на екрані
         screen.blit(enemy, (self.x, self.y))
