@@ -11,7 +11,7 @@ class Player:
         self.speed = speed
         self.bullets = []
         self.rect = pygame.Rect(x, y, player.get_width(), player.get_height())
-        self.rotate_index = ""
+        self.rotate_index = 1
 
     def run(self):
         keys = pygame.key.get_pressed()
@@ -58,12 +58,12 @@ class Player:
                 return True
         return False
 
-    def fire(self):
-        buttons = pygame.mouse.get_pressed()
-        if buttons[0]:
-            bullet = pygame.draw.rect(screen, (255, 0, 0), (self.rect.x, self.rect.y, 5, 5))
-            direction = self.rotate_index
-            self.bullets.append((bullet, direction))
+    def fire(self, events):
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                bullet = pygame.Rect(self.rect.x, self.rect.y, 5, 5)
+                direction = self.rotate_index
+                self.bullets.append((bullet, direction))
 
         for bullet, direction in self.bullets:
             if direction == 1:

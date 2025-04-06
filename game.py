@@ -3,7 +3,6 @@ from player import *
 from enemy import *
 from map import *
 
-
 pygame.init()
 screen = pygame.display.set_mode((1000, 600))
 clock = pygame.time.Clock()
@@ -57,34 +56,37 @@ class MainMenu:
 
 def game_loop():
     player = Player(100, 5, 4, 100, 100)
-    enemy = EnemyShooter(60, 5, 5)
+    enemy = EnemyShooter(60, 5, 5, 0, 0)
     map = Map()
 
     running = True
     while running:
         screen.fill((0, 0, 50))
 
-        player.fire()
-
         player.run()
         if len(enemies) < 3:
             for _ in range(3 - len(enemies)):
-                enemy = EnemyShooter(60, 5, 5)
+                enemy = EnemyShooter(60, 5, 5, 0, 0)
                 enemy.spawn()
                 enemies.append(enemy)
 
         map.generating_map()
 
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 running = False
                 pygame.quit()
 
+        player.fire(events)
+        
         for enemy in enemies:
             enemy.moving()
+            enemy.attack()
+
 
         pygame.display.update()
-        clock.tick(120)
+        clock.tick(30)
 
 def main():
     menu = MainMenu()
@@ -110,4 +112,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
