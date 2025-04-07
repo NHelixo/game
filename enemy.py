@@ -81,12 +81,8 @@ class EnemyShooter(Enemy):
 
     def moving(self):
         new_x, new_y = self.x, self.y
-        self.rect = pygame.Rect(self.x, self.y, enemy.get_width(), enemy.get_height())
-
-        # Перевірка на зіткнення з блоками
-        if self.check_collision(rect_map_1, self.rect):
-            self.target_reached = True
-
+    
+        # Рух відповідно до напрямку
         if self.move_rand == 1:
             new_x -= self.speed
         elif self.move_rand == 2:
@@ -95,28 +91,31 @@ class EnemyShooter(Enemy):
             new_y -= self.speed
         elif self.move_rand == 4:
             new_y += self.speed
-
+    
+        # Створюємо прямокутник для нової позиції
+        new_rect = pygame.Rect(new_x, new_y, enemy.get_width(), enemy.get_height())
+    
         # Перевірка меж екрану
-        bounds = {1: new_x <= 0, 2: new_x >= 940, 3: new_y <= 0, 4: new_y >= 531}
-        if bounds.get(self.move_rand):
-            new_x = max(0, min(new_x, 940))
-            new_y = max(0, min(new_y, 531))
+        if new_x <= 0 or new_x >= 940 or new_y <= 0 or new_y >= 531:
             self.target_reached = True
             self.last_collided = None
-
+        elif self.check_collision(rect_map_1, new_rect):
+            # Якщо зіткнення з блоком — змінити напрям
+            self.target_reached = True
+    
         if self.target_reached:
             old_direction = self.move_rand
             self.change_direction(exclude=[old_direction])
             self.target_reached = False
         else:
             self.x, self.y = new_x, new_y
-
+    
         self.rect.x, self.rect.y = self.x, self.y
-
-        # Відображення ворога на екрані
+    
+        # Відображення ворога
         screen.blit(enemy, (self.x, self.y))
-
-        # Відображення здоров'я ворога
+    
+        # Відображення здоров'я
         font = pygame.font.SysFont("Arial", 20)
         health_text = font.render(str(self.health), True, (255, 0, 0))
         screen.blit(health_text, (self.x, self.y - 20))
