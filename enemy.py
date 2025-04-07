@@ -11,8 +11,8 @@ class Enemy:
         self.damage = damage
         self.speed = speed
         self.move_rand = 0
-        self.x = 200
-        self.y = 200
+        self.x = 500
+        self.y = 300
 
     @abstractmethod
     def spawn(self):
