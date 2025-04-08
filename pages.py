@@ -11,8 +11,7 @@ class MainMenu:
     def __init__(self):
         self.buttons = [
             pygame.Rect(375, 250, 250, 50),  # Кнопка "Play"
-            pygame.Rect(375, 320, 250, 50),  # Кнопка "Maps"
-            pygame.Rect(375, 390, 250, 50),  # Кнопка "Settings"
+            pygame.Rect(375, 350, 250, 50),  # Кнопка "Settings"
         ]
         
     def draw(self):
@@ -27,15 +26,12 @@ class MainMenu:
         
         play_button_color = (0, 0, 80) if not self.buttons[0].collidepoint(mouse_pos) else (0, 100, 200)
         maps_button_color = (0, 0, 80) if not self.buttons[1].collidepoint(mouse_pos) else (0, 100, 200)
-        settings_button_color = (0, 0, 80) if not self.buttons[2].collidepoint(mouse_pos) else (0, 100, 200)
 
         pygame.draw.rect(screen, play_button_color, self.buttons[0])  # Play
-        pygame.draw.rect(screen, maps_button_color, self.buttons[1])  # Maps
-        pygame.draw.rect(screen, settings_button_color, self.buttons[2])  # Settings
+        pygame.draw.rect(screen, maps_button_color, self.buttons[1])  # Settings
 
         draw_text("Play", font, (255, 255, 255), screen, 460, 260)
-        draw_text("Maps", font, (255, 255, 255), screen, 450, 330)
-        draw_text("Settings", font, (255, 255, 255), screen, 430, 397)
+        draw_text("Settings", font, (255, 255, 255), screen, 430, 360)
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -50,7 +46,7 @@ class MainMenu:
 class Game_Over:
     def __init__(self):
         self.buttons = [
-            pygame.Rect(375, 300, 250, 50),  # Кнопка "Play"
+            pygame.Rect(375, 320, 250, 50),  # Кнопка "Play"
             pygame.Rect(375, 400, 250, 50),  # Quit
         ]
 
@@ -71,7 +67,7 @@ class Game_Over:
         pygame.draw.rect(screen, mainmenu_button_color, self.buttons[0])  # Main Menu
         pygame.draw.rect(screen, (0, 0, 80), self.buttons[1])  # Quit
 
-        draw_text("Main Menu", font, (255, 255, 255), screen, 410, 310)
+        draw_text("Main Menu", font, (255, 255, 255), screen, 410, 330)
         draw_text("Quit", font, (255, 255, 255), screen, 460, 410)
 
     def handle_events(self, event):
@@ -125,8 +121,8 @@ class PauseMenu:
 class Maps():
     def __init__(self):
         self.buttons = [
-            pygame.Rect(375, 50, 250, 70),  # Кнопка "Map1"
-            pygame.Rect(375, 140, 250, 70),  # Кнопка "Map2"
+            pygame.Rect(300, 50, 400, 70),  # Кнопка "Map1"
+            pygame.Rect(300, 140, 400, 70),  # Кнопка "Map2"
         ]
 
     def draw(self):
@@ -140,15 +136,13 @@ class Maps():
         pygame.draw.rect(screen, map1_button_color, self.buttons[0])  # Map1
         pygame.draw.rect(screen, map2_button_color, self.buttons[1])  # Map2
 
-        draw_text("Map1", font, (255, 255, 255), screen, 460, 60)
-        draw_text("Map2", font, (255, 255, 255), screen, 460, 150)
+        draw_text("Map1", font, (255, 255, 255), screen, 490, 70)
+        draw_text("Map2", font, (255, 255, 255), screen, 490, 160)
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.buttons[0].collidepoint(event.pos):
                 return "map1"
             elif self.buttons[1].collidepoint(event.pos):
-                return "map2"
-            # elif self.buttons[2].collidepoint(event.pos):
-            #     return "quit"
+                return "settings"
         return None  

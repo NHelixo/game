@@ -14,23 +14,42 @@ font = pygame.font.SysFont(None, 50)
 enemies: list[EnemyShooter] = []
 # map = Map()
 
+def update_game(player, enemies, events):
+    player.fire(events, enemies)
+    player.run()
+    for enemy in enemies[:]:
+        enemy.moving()
+        enemy.attack(player)
+        if enemy.health <= 0:
+            player.xp += enemy.add_points()
+            enemies.remove(enemy)
+
+def draw_game(screen, player, enemies, selected_map):
+    screen.fill((0, 0, 50))
+    selected_map.generating_map()
+    # HP/XP
+    hp = font.render(f'HP: {player.health}', True, (255, 255, 255))
+    xp = font.render(f'XP: {player.xp}', True, (255, 255, 255))
+    screen.blit(hp, (10, 10))
+    screen.blit(xp, (160, 10))
+
 
 def spawn_enemy(x=0, y=0):
     enemy = EnemyShooter(60, 5, 5, x, y)
     enemy.spawn()
     return enemy
 
-def game_loop():
+def game_loop(selected_map):
     global enemies  # щоб змінювати глобальний список ворогів і вони знову спавнились в початковій точці в новій грі
     enemies = []
     player = Player(10, 5, 4, 100, 100)
-    map = Map()
+    # map = Map()
     pause_menu = PauseMenu()
     paused = False
 
+
     running = True
     while running:
-        screen.fill((0, 0, 50))
 
         # Спавн ворогів
         while len(enemies) < 3:
@@ -58,34 +77,15 @@ def game_loop():
         if paused:
             pause_menu.draw()
         else:
-            map.generating_map()
-            player.fire(events, enemies)
-            
-            player.run()
-
-            # Рух і атака ворогів
-            for enemy in enemies:
-                enemy.moving()
-                enemy.attack(player)
-                if enemy.health <= 0:
-                    player.xp += enemy.add_points()
-                    enemies.remove(enemy)
-
-            # Вивід HP
-            hp_text = font.render(f'HP: {player.health}', True, (255, 255, 255))
-            screen.blit(hp_text, (10, 10))
-
-            # Вивід XP
-            hp_text = font.render(f'XP: {player.xp}', True, (255, 255, 255))
-            screen.blit(hp_text, (160, 10))
-
+            draw_game(screen, player, enemies, selected_map)
+            update_game(player, enemies, events)
 
             # Перевірка чи гравець мертвий
             if player.is_dead():
                 running = False    
                 game_over = Game_Over()
                 game_over.draw()
-                # hp_text = font.render(f'XP: {player.xp}', True, (255, 255, 255))
+                hp_text = font.render(f'XP: {player.xp}', True, (255, 255, 255))
                 screen.blit(hp_text, (450, 230))
                 pygame.display.update()
 
@@ -108,8 +108,7 @@ def game_loop():
 
 def main():
     menu = MainMenu()
-    # maps = Maps()
-    # chosing = True
+    maps = Maps()
     running = True
     while running:
         menu.draw()
@@ -122,21 +121,25 @@ def main():
 
             action = menu.handle_events(event)
             if action == "play":
-                game_loop()  
-            # elif action == "maps":
-            #     pass
-                    # action = maps.handle_events(event)
-                    # if action == "map1":
-                    #     map = Map()
-                    #     map.map1()
-                    #     game_loop()
-                    # elif action == "map2":
-                    #     map = Map()
-                    #     map.map2()
-                    #     game_loop()
-                    # elif action == "back":
-                    #     chosing = False
-                # maps.draw()
+                selected_map = None
+                while selected_map is None:
+                    maps.draw()
+                    pygame.display.update()
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            return
+
+                        action = maps.handle_events(event)
+                        if action == "map1":
+                            selected_map = Map() 
+                            game_loop(selected_map)  # Виклик гри з вибраною мапою
+                        elif action == "map2":
+                            selected_map = Map()  
+                            game_loop(selected_map)
+            elif action == "settings":
+                pass
+
             elif action == "quit":
                 running = False
                 pygame.quit()

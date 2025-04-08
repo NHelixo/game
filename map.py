@@ -9,9 +9,6 @@ pygame.display.set_caption("game")
 
 
 class Map:
-    def __init__(self):
-        pass
-
     def generating_map(self):
         for rect in rect_map_1:
             pygame.draw.rect(screen, (0, 0, 0), rect)
