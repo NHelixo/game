@@ -102,7 +102,7 @@ class PauseMenu:
         paused_text = pygame.image.load('sprites\map\paused_text.png')  
         paused_text = pygame.transform.scale(paused_text, (400, 100))
 
-        screen.blit(paused_text, (255, 100))
+        screen.blit(paused_text, (305, 100))
         # draw_text("Paused", font, (255, 255, 255), screen, 440, 150)
 
         mouse_pos = pygame.mouse.get_pos()
@@ -184,13 +184,21 @@ def game_loop():
             # Спавн ворогів
             while len(enemies) < 3:
                 enemies.append(spawn_enemy())
-        # Рух і атака ворогів
+            # Рух і атака ворогів
             for enemy in enemies:
                 enemy.moving()
                 enemy.attack(player)
                 if enemy.health <= 0:
                     player.xp += enemy.add_points()
                     enemies.remove(enemy)
+
+            # Вивід HP
+            hp_text = font.render(f'HP: {player.health}', True, (255, 255, 255))
+            screen.blit(hp_text, (10, 10))
+
+            # Вивід XP
+            hp_text = font.render(f'XP: {player.xp}', True, (255, 255, 255))
+            screen.blit(hp_text, (160, 10))
 
 
             # Перевірка чи гравець мертвий
@@ -213,17 +221,6 @@ def game_loop():
                         elif action == "quit":
                             pygame.quit()
                             return
-                
-                        
-
-
-        # Вивід HP
-        hp_text = font.render(f'HP: {player.health}', True, (255, 255, 255))
-        screen.blit(hp_text, (10, 10))
-
-        # Вивід XP
-        hp_text = font.render(f'XP: {player.xp}', True, (255, 255, 255))
-        screen.blit(hp_text, (160, 10))
 
         pygame.display.update()
         clock.tick(30)
