@@ -2,7 +2,15 @@ import pygame
 
 player = pygame.image.load('sprites/player/player.png')
 
-enemy = pygame.image.load('sprites/enemy/enemy.png')
+skeleton_forward = pygame.image.load('sprites/enemy/Skeleto_new/skeleton_forward.png')
+skeleton_back = pygame.image.load('sprites/enemy/Skeleto_new/skeleton_back.png')
+skeleton_left = pygame.image.load('sprites/enemy/Skeleto_new/skeleton_left.png')
+skeleton_right = pygame.image.load('sprites/enemy/Skeleto_new/skeleton_right.png')
+
+main_forward = pygame.image.load('sprites/player/new_main_anim/main_anim_forward.png')
+main_back = pygame.image.load('sprites/player/new_main_anim/main_anim_back.png')
+main_left = pygame.image.load('sprites/player/new_main_anim/main_anim_left.png')
+main_right = pygame.image.load('sprites/player/new_main_anim/main_anim_right.png')
 
 wall_1 = pygame.image.load('sprites/map/wall_1.png')
 wall_2 = pygame.image.load('sprites/map/wall_2.png')

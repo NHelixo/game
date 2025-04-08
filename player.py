@@ -13,6 +13,8 @@ class Player:
         self.xp = 0
         self.rect = pygame.Rect(x, y, player.get_width(), player.get_height())
         self.rotate_index = 1
+        self.fire_direction = [self.rect.x, self.rect.y + 10]
+        self.player_direction = main_forward
 
     def run(self):
         keys = pygame.key.get_pressed()
@@ -23,15 +25,23 @@ class Player:
         if keys[pygame.K_a]:
             dx = -self.speed
             self.rotate_index = 1
+            self.fire_direction = [self.rect.x, self.rect.y + 10]
+            self.player_direction = main_left
         if keys[pygame.K_d]:
             dx = self.speed
             self.rotate_index = 2
+            self.fire_direction = [self.rect.x + main_right.get_width(), self.rect.y + 10]
+            self.player_direction = main_right
         if keys[pygame.K_w]:
             dy = -self.speed
             self.rotate_index = 3
+            self.fire_direction = [self.rect.x + main_back.get_height() / 2, self.rect.y]
+            self.player_direction = main_back
         if keys[pygame.K_s]:
             dy = self.speed
             self.rotate_index = 4
+            self.fire_direction = [self.rect.x + main_forward.get_height() / 2, self.rect.y + main_forward.get_width()]
+            self.player_direction = main_forward
 
         self.rect.x += dx
         if self.rect.x <= 0:
@@ -51,7 +61,7 @@ class Player:
         if self.check_collision(rect_map_1):
             self.rect.y -= dy
 
-        screen.blit(player, (self.rect.x, self.rect.y))
+        screen.blit(self.player_direction, (self.rect.x, self.rect.y))
 
     def check_collision(self, blocks):
         for block in blocks:
@@ -63,7 +73,7 @@ class Player:
         # Обробка події натискання на кнопку миші
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                bullet = pygame.Rect(self.rect.x, self.rect.y, 5, 5)
+                bullet = pygame.Rect(self.fire_direction[0], self.fire_direction[1] + 20, 5, 5)
                 direction = self.rotate_index
                 self.bullets.append((bullet, direction))
 

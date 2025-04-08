@@ -29,7 +29,7 @@ class MainMenu:
     def draw(self):
         pygame.display.set_caption("Menu")
         screen.fill((0, 0, 50)) 
-        menu_text = pygame.image.load('sprites\map\main_menu_text.png') 
+        menu_text = pygame.image.load('sprites\map\main_menu_text.png')
         menu_text = pygame.transform.scale(menu_text, (500, 100))
 
         screen.blit(menu_text, (255, 100))

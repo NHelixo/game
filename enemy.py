@@ -34,12 +34,14 @@ class Enemy:
 class EnemyShooter(Enemy):
     def __init__(self, health, damage, speed, x, y):
         super().__init__(health, damage, speed)
-        self.rect = pygame.Rect(x, y, enemy.get_width(), enemy.get_height())
+        self.rect = pygame.Rect(x, y, skeleton_forward.get_width(), skeleton_forward.get_height())
         self.last_shot_time = 0
         self.shot_delay = 1000
         self.bullets = []
         self.target_reached = False
         self.last_collided = None
+        self.enemy_direction = skeleton_forward
+        self.fire_direction = [self.x, self.y]
 
     def spawn(self):
         self.move_rand = randint(1, 4)
@@ -49,16 +51,20 @@ class EnemyShooter(Enemy):
     def attack(self, player):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.shot_delay:
-            bullet = pygame.Rect(self.x, self.y, 5, 5)
+            bullet = pygame.Rect(self.fire_direction[0], self.fire_direction[1], 5, 5)
             self.bullets.append((bullet, self.move_rand))
             self.last_shot_time = current_time
 
         new_bullets = []
         for bullet, move_rand in self.bullets:
-            if move_rand == 1: bullet.x -= 10
-            elif move_rand == 2: bullet.x += 10
-            elif move_rand == 3: bullet.y -= 10
-            elif move_rand == 4: bullet.y += 10
+            if move_rand == 1:
+                bullet.x -= 10
+            elif move_rand == 2:
+                bullet.x += 10
+            elif move_rand == 3:
+                bullet.y -= 10
+            elif move_rand == 4:
+                bullet.y += 10
 
             if bullet.colliderect(player.rect):
                 player.take_damage(10)
@@ -85,15 +91,23 @@ class EnemyShooter(Enemy):
         # Рух відповідно до напрямку
         if self.move_rand == 1:
             new_x -= self.speed
+            self.enemy_direction = skeleton_left
+            self.fire_direction = [self.x, self.y + 20]
         elif self.move_rand == 2:
             new_x += self.speed
+            self.enemy_direction = skeleton_right
+            self.fire_direction = [self.x + skeleton_right.get_width(), self.y + 20]
         elif self.move_rand == 3:
             new_y -= self.speed
+            self.enemy_direction = skeleton_back
+            self.fire_direction = [self.x + skeleton_back.get_height() / 2, self.y]
         elif self.move_rand == 4:
             new_y += self.speed
+            self.enemy_direction = skeleton_forward
+            self.fire_direction = [self.x + skeleton_forward.get_height() / 2, self.y + skeleton_forward.get_width()]
     
         # Створюємо прямокутник для нової позиції
-        new_rect = pygame.Rect(new_x, new_y, enemy.get_width(), enemy.get_height())
+        new_rect = pygame.Rect(new_x, new_y, skeleton_forward.get_width(), skeleton_forward.get_height())
     
         # Перевірка меж екрану
         if new_x <= 0 or new_x >= 940 or new_y <= 0 or new_y >= 531:
@@ -113,7 +127,7 @@ class EnemyShooter(Enemy):
         self.rect.x, self.rect.y = self.x, self.y
     
         # Відображення ворога
-        screen.blit(enemy, (self.x, self.y))
+        screen.blit(self.enemy_direction, (self.x, self.y))
     
         # Відображення здоров'я
         font = pygame.font.SysFont("Arial", 20)
