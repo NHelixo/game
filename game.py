@@ -142,17 +142,16 @@ def game_loop():
     map = Map()
     pause_menu = PauseMenu()
     paused = False
-    running = True
 
     running = True
     while running:
         screen.fill((0, 0, 50))
 
-        player.run()
+        # player.run()
 
-        # Спавн ворогів
-        while len(enemies) < 3:
-            enemies.append(spawn_enemy())
+        # # Спавн ворогів
+        # while len(enemies) < 3:
+        #     enemies.append(spawn_enemy())
 
     
         events = pygame.event.get()
@@ -179,14 +178,19 @@ def game_loop():
         else:
             map.generating_map()
             player.fire(events, enemies)
+            
+            player.run()
 
+            # Спавн ворогів
+            while len(enemies) < 3:
+                enemies.append(spawn_enemy())
         # Рух і атака ворогів
-        for enemy in enemies:
-            enemy.moving()
-            enemy.attack(player)
-            if enemy.health <= 0:
-                player.xp += enemy.add_points()
-                enemies.remove(enemy)
+            for enemy in enemies:
+                enemy.moving()
+                enemy.attack(player)
+                if enemy.health <= 0:
+                    player.xp += enemy.add_points()
+                    enemies.remove(enemy)
 
 
             # Перевірка чи гравець мертвий
