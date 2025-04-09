@@ -11,7 +11,7 @@ class Player:
         self.speed = speed
         self.bullets = []
         self.xp = 0
-        self.rect = pygame.Rect(x, y, player.get_width(), player.get_height())
+        self.rect = pygame.Rect(x, y, main_forward.get_width(), main_forward.get_height())
         self.rotate_index = 1
         self.fire_direction = [self.rect.x, self.rect.y + 10]
         self.player_direction = main_forward

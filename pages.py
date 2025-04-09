@@ -144,5 +144,5 @@ class Maps():
             if self.buttons[0].collidepoint(event.pos):
                 return "map1"
             elif self.buttons[1].collidepoint(event.pos):
-                return "settings"
+                return "map2"
         return None  
