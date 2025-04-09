@@ -93,3 +93,4 @@ map_2 = [[wall_2, 470, 80],
          [wall_2, 680, 340],]
 
 rect_map_1 = [pygame.Rect(cor[1], cor[2], 60, 60) for cor in map_1]
+rect_map_2 = [pygame.Rect(cor[1], cor[2], 60, 60) for cor in map_2]

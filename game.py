@@ -3,6 +3,7 @@ from player import *
 from enemy import *
 from map import *
 from pages import *
+from sprites import *
 
 pygame.init()
 screen = pygame.display.set_mode((1000, 600))
@@ -73,7 +74,6 @@ def game_loop(selected_map):
                 elif action == "quit":
                     pygame.quit()
                     return
-                
         if paused:
             pause_menu.draw()
         else:
@@ -132,10 +132,12 @@ def main():
 
                         action = maps.handle_events(event)
                         if action == "map1":
-                            selected_map = Map() 
+                            map = Map(rect_map_1, map_1)
+                            selected_map = map
                             game_loop(selected_map)  # Виклик гри з вибраною мапою
                         elif action == "map2":
-                            selected_map = Map()  
+                            map = Map(rect_map_2, map_2)
+                            selected_map = map
                             game_loop(selected_map)
             elif action == "settings":
                 pass
