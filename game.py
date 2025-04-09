@@ -5,6 +5,17 @@ from map import *
 from pages import *
 from sprites import *
 
+pygame.mixer.init()
+
+# Завантаження музики
+pygame.mixer.music.load("sounds/sound_track.mp3")
+
+# Гучність
+pygame.mixer.music.set_volume(0.1)
+
+# Програвання музики
+pygame.mixer.music.play(-1)
+
 pygame.init()
 screen = pygame.display.set_mode((1000, 600))
 clock = pygame.time.Clock()
