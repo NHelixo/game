@@ -32,7 +32,7 @@ class Enemy:
 
 
 class EnemyShooter(Enemy):
-    def __init__(self, health, damage, speed, x, y):
+    def __init__(self, health, damage, speed, x, y, rect_map):
         super().__init__(health, damage, speed)
         self.rect = pygame.Rect(x, y, skeleton_forward.get_width(), skeleton_forward.get_height())
         self.last_shot_time = 0
@@ -42,6 +42,7 @@ class EnemyShooter(Enemy):
         self.last_collided = None
         self.enemy_direction = skeleton_forward
         self.fire_direction = [self.x, self.y]
+        self.rect_map = rect_map  # Зберігаємо rect_map як атрибут
 
     def spawn(self):
         self.move_rand = randint(1, 4)
@@ -72,7 +73,7 @@ class EnemyShooter(Enemy):
 
             # Перевірка на зіткнення з блоками
             hit_wall = False
-            for wall in rect_map_1:
+            for wall in self.rect_map:  # Використовуємо self.rect_map:
                 if bullet.colliderect(wall):
                     hit_wall = True
                     break
@@ -113,7 +114,7 @@ class EnemyShooter(Enemy):
         if new_x <= 0 or new_x >= 940 or new_y <= 0 or new_y >= 531:
             self.target_reached = True
             self.last_collided = None
-        elif self.check_collision(rect_map_1, new_rect):
+        elif self.check_collision(self.rect_map, new_rect):
             # Якщо зіткнення з блоком — змінити напрям
             self.target_reached = True
     

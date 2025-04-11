@@ -46,15 +46,15 @@ def draw_game(screen, player, enemies, selected_map):
     screen.blit(xp, (160, 10))
 
 
-def spawn_enemy(x=0, y=0):
-    enemy = EnemyShooter(60, 5, 5, x, y)
+def spawn_enemy(x=0, y=0, rect_map = None):
+    enemy = EnemyShooter(60, 5, 5, x, y, rect_map)
     enemy.spawn()
     return enemy
 
 def game_loop(selected_map):
     global enemies  # щоб змінювати глобальний список ворогів і вони знову спавнились в початковій точці в новій грі
     enemies = []
-    player = Player(10, 5, 4, 100, 100)
+    player = Player(10, 5, 4, 15, 100, selected_map.rect_map)   # Передаємо rect_map
     # map = Map()
     pause_menu = PauseMenu()
     paused = False
@@ -65,7 +65,7 @@ def game_loop(selected_map):
 
         # Спавн ворогів
         while len(enemies) < 3:
-            enemies.append(spawn_enemy())
+            enemies.append(spawn_enemy(rect_map=selected_map.rect_map))  # Передаємо rect_map
     
         events = pygame.event.get()
         for event in events:

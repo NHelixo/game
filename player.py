@@ -4,7 +4,7 @@ import pygame
 
 
 class Player:
-    def __init__(self, health, damage, speed, x, y):
+    def __init__(self, health, damage, speed, x, y, rect_map):
         self.anim_count_walk = 0
         self.health = health
         self.damage = damage
@@ -15,6 +15,7 @@ class Player:
         self.rotate_index = 1
         self.fire_direction = [self.rect.x, self.rect.y + 10]
         self.player_direction = main_forward
+        self.rect_map = rect_map  # Зберігаємо rect_map як атрибут
 
     def run(self):
         keys = pygame.key.get_pressed()
@@ -49,7 +50,7 @@ class Player:
         if self.rect.x >= 940:
             self.rect.x = 940
 
-        if self.check_collision(rect_map_1):
+        if self.check_collision(self.rect_map):  # Використовуємо self.rect_map
             self.rect.x -= dx
 
         self.rect.y += dy
@@ -58,7 +59,7 @@ class Player:
         if self.rect.y >= 531:
             self.rect.y = 531
 
-        if self.check_collision(rect_map_1):
+        if self.check_collision(self.rect_map):  # Використовуємо self.rect_map
             self.rect.y -= dy
 
         screen.blit(self.player_direction, (self.rect.x, self.rect.y))
@@ -90,7 +91,7 @@ class Player:
 
             # Перевірка на зіткнення з блоками
             hit_wall = False
-            for wall in rect_map_1:
+            for wall in self.rect_map:  # Використовуємо self.rect_map
                 if bullet.colliderect(wall):
                     hit_wall = True
                     break
