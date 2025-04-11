@@ -77,6 +77,7 @@ class Player:
                 bullet = pygame.Rect(self.fire_direction[0], self.fire_direction[1] + 20, 5, 5)
                 direction = self.rotate_index
                 self.bullets.append((bullet, direction))
+                fire_sound.play()
 
         new_bullets = []
         for bullet, direction in self.bullets:
@@ -118,6 +119,7 @@ class Player:
     def take_damage(self, amount):
         self.health -= amount
         print(f"Player HP: {self.health}")
+        player_hit_sound.play()
 
     def is_dead(self):
         return self.health <= 0

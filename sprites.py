@@ -1,6 +1,11 @@
 import pygame
 
+pygame.mixer.init()
+
 player = pygame.image.load('sprites/player/player.png')
+
+# Зілля зцілення
+hill = pygame.image.load('sprites/map/hill.png')
 
 # Ворог
 skeleton_forward = pygame.image.load('sprites/enemy/Skeleto_new/skeleton_forward.png')
@@ -18,6 +23,15 @@ main_right = pygame.image.load('sprites/player/new_main_anim/main_anim_right.png
 # Стінки
 wall_1 = pygame.image.load('sprites/map/wall_1.png')
 wall_2 = pygame.image.load('sprites/map/wall_2.png')
+
+# Звуки
+skeleton_rotate_1 = pygame.mixer.Sound("sounds/sound/skeleton_rotate_1.mp3")
+skeleton_rotate_2 = pygame.mixer.Sound("sounds/sound/skeleton_rotate_2.mp3")
+skeleton_hit_1 = pygame.mixer.Sound("sounds/sound/skeleton_hit_1.mp3")
+skeleton_hit_2 = pygame.mixer.Sound("sounds/sound/skeleton_hit_2.mp3")
+fire_sound = pygame.mixer.Sound("sounds/sound/fire_sound.wav")
+skeleton_death_sound = pygame.mixer.Sound("sounds/sound/skeleton_death_sound.mp3")
+player_hit_sound = pygame.mixer.Sound("sounds/sound/player_hit_sound.mp3")
 
 map_1 = [[wall_1, 290, 280],
          [wall_1, 350, 340],

@@ -35,6 +35,7 @@ def update_game(player, enemies, events):
         if enemy.health <= 0:
             player.xp += enemy.add_points()
             enemies.remove(enemy)
+            skeleton_death_sound.play()
 
 def draw_game(screen, player, enemies, selected_map):
     screen.fill((0, 0, 50))
@@ -54,7 +55,7 @@ def spawn_enemy(x=0, y=0, rect_map = None):
 def game_loop(selected_map):
     global enemies  # щоб змінювати глобальний список ворогів і вони знову спавнились в початковій точці в новій грі
     enemies = []
-    player = Player(10, 5, 4, 15, 100, selected_map.rect_map)   # Передаємо rect_map
+    player = Player(100, 5, 4, 15, 100, selected_map.rect_map)   # Передаємо rect_map
     # map = Map()
     pause_menu = PauseMenu()
     paused = False

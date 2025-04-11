@@ -42,7 +42,7 @@ class EnemyShooter(Enemy):
         self.last_collided = None
         self.enemy_direction = skeleton_forward
         self.fire_direction = [self.x, self.y]
-        self.rect_map = rect_map  # Зберігаємо rect_map як атрибут
+        self.rect_map = rect_map
 
     def spawn(self):
         self.move_rand = randint(1, 4)
@@ -94,14 +94,17 @@ class EnemyShooter(Enemy):
             new_x -= self.speed
             self.enemy_direction = skeleton_left
             self.fire_direction = [self.x, self.y + 20]
+
         elif self.move_rand == 2:
             new_x += self.speed
             self.enemy_direction = skeleton_right
             self.fire_direction = [self.x + skeleton_right.get_width(), self.y + 20]
+
         elif self.move_rand == 3:
             new_y -= self.speed
             self.enemy_direction = skeleton_back
             self.fire_direction = [self.x + skeleton_back.get_height() / 2, self.y]
+
         elif self.move_rand == 4:
             new_y += self.speed
             self.enemy_direction = skeleton_forward
@@ -148,12 +151,20 @@ class EnemyShooter(Enemy):
 
     def take_damage(self, amount):
         self.health -= amount
-        if self.health <= 0:
-            pass
+        sound_rand = randint(1, 2)
+        if sound_rand == 1:
+            skeleton_hit_1.play()
+        elif sound_rand == 2:
+            skeleton_hit_2.play()
 
     def change_direction(self, exclude=[]):
         directions = [d for d in [1, 2, 3, 4] if d not in exclude]
         self.move_rand = randint(1, 4) if not directions else directions[randint(0, len(directions) - 1)]
+        sound_rand = randint(1, 2)
+        if sound_rand == 1:
+            skeleton_rotate_1.play()
+        elif sound_rand == 2:
+            skeleton_rotate_2.play()
 
 
 class MeleeAttackEnemy(Enemy):
